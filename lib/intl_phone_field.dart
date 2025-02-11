@@ -402,6 +402,8 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
       onFieldSubmitted: widget.onSubmitted,
       magnifierConfiguration: widget.magnifierConfiguration,
       decoration: widget.decoration.copyWith(
+        prefixIconConstraints: BoxConstraints(minWidth: 0, minHeight: 0), // Prevent unnecessary spacing
+
         filled: true,
         fillColor: Colors.white, // Ensure background is always white
         prefixIcon: _buildFlagsButton(),
