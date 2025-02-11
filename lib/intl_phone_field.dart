@@ -359,8 +359,6 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
 
   Future<void> _changeCountry() async {
     filteredCountries = _countryList;
-    FocusScope.of(context).unfocus(); // Unfocus before opening the dialog
-
     await showDialog(
       context: context,
       useRootNavigator: false,
@@ -380,13 +378,7 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
         ),
       ),
     );
-    if (mounted) {
-      setState(() {});
-      Future.delayed(Duration(milliseconds: 100), () {
-        widget.focusNode?.requestFocus(); // Ensure focus returns after dialog closes
-      });
-    }
-    ;
+    if (mounted) setState(() {});
   }
 
   @override
@@ -544,11 +536,6 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
                           setState(() {
                             _selectedCountry = newCountry;
                           });
-
-                          Future.delayed(Duration(milliseconds: 100), () {
-                            widget.focusNode?.requestFocus(); // Re-request focus after setState
-                          });
-
                           widget.onCountryChanged?.call(newCountry);
                         }
                       }
