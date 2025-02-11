@@ -543,7 +543,8 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
                       }
                     },
                   ),
-                )
+                ),
+                Text("hi")
                 // const SizedBox(width: 8),
               ],
             ),
