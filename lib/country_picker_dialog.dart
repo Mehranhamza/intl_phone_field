@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/helpers.dart';
 
@@ -120,20 +121,30 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
                 itemBuilder: (ctx, index) => Column(
                   children: <Widget>[
                     ListTile(
-                      leading: kIsWeb
-                          ? Image.asset(
-                              'assets/flags/${_filteredCountries[index].code.toLowerCase()}.png',
-                              package: 'intl_phone_field',
-                              width: 32,
-                            )
-                          : Text(
-                              _filteredCountries[index].flag,
-                              style: const TextStyle(fontSize: 18),
-                            ),
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(8), // Adjust the rounding here
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8), // Ensures rounded edges
+                            border: Border.all(color: Colors.grey.withOpacity(0.3)), // Optional border
+                          ),
+                          child: Image.asset(
+                            'assets/flags/${_filteredCountries[index].code.toLowerCase()}.png',
+                            package: 'intl_phone_field',
+                            width: 32,
+                            height: 24,
+                            fit: BoxFit.fill, // Makes sure it stretches fully
+                          ),
+                        ),
+                      ),
                       contentPadding: widget.style?.listTilePadding,
                       title: Text(
                         _filteredCountries[index].localizedName(widget.languageCode),
-                        style: widget.style?.countryNameStyle ?? const TextStyle(fontWeight: FontWeight.w700),
+                        style: TextStyle(
+                            fontFamily: "OpenSansHebrew-Bold",
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0XFF3F4648)),
                       ),
                       trailing: Text(
                         '+${_filteredCountries[index].dialCode}',

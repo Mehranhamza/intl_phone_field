@@ -4,6 +4,8 @@ import 'dart:async';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/helpers.dart';
 
@@ -357,6 +359,8 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
 
   Future<void> _changeCountry() async {
     filteredCountries = _countryList;
+    FocusScope.of(context).unfocus(); // Unfocus before opening the dialog
+
     await showDialog(
       context: context,
       useRootNavigator: false,
@@ -376,7 +380,13 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
         ),
       ),
     );
-    if (mounted) setState(() {});
+    if (mounted) {
+      setState(() {});
+      Future.delayed(Duration(milliseconds: 100), () {
+        widget.focusNode?.requestFocus(); // Ensure focus returns after dialog closes
+      });
+    }
+    ;
   }
 
   @override
@@ -400,6 +410,8 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
       onFieldSubmitted: widget.onSubmitted,
       magnifierConfiguration: widget.magnifierConfiguration,
       decoration: widget.decoration.copyWith(
+        filled: true,
+        fillColor: Colors.white, // Ensure background is always white
         prefixIcon: _buildFlagsButton(),
         counterText: !widget.enabled ? '' : null,
       ),
@@ -448,62 +460,102 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
   }
 
   Container _buildFlagsButton() {
+    TextEditingController countryCodeController = TextEditingController(text: '+${_selectedCountry.dialCode}');
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16),
       margin: widget.flagsButtonMargin,
       child: DecoratedBox(
         decoration: widget.dropdownDecoration,
         child: InkWell(
+          splashColor: Colors.transparent, // Remove click effect
+          highlightColor: Colors.transparent, // Remove grey overlay
           borderRadius: widget.dropdownDecoration.borderRadius as BorderRadius?,
-          onTap: widget.enabled ? _changeCountry : null,
+          onTap: () {
+            if (widget.enabled) {
+              _changeCountry();
+            }
+          },
           child: Padding(
             padding: widget.flagsButtonPadding,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                if (widget.showCountryFlag) ...[
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8), // Soft rounded rectangle
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Color(0XFF8B939C).withOpacity(0.2)),
-                      ),
-                      child: Image.asset(
-                        'assets/flags/${_selectedCountry.code.toLowerCase()}.png',
-                        package: 'intl_phone_field',
-                        fit: BoxFit.cover, // Ensures the flag fills the box properly
-                        width: 32,
-                        height: 24,
-                      ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8), // Soft rounded rectangle
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white, // Ensure it’s not grey
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Color(0XFF8B939C).withOpacity(0.2)),
+                    ),
+                    child: Image.asset(
+                      'assets/flags/${_selectedCountry.code.toLowerCase()}.png',
+                      package: 'intl_phone_field',
+                      fit: BoxFit.cover, // Ensures the flag fills the box properly
+                      width: 32,
+                      height: 24,
                     ),
                   ),
-                  const SizedBox(width: 8),
-                ],
+                ),
                 const SizedBox(width: 4),
-                if (widget.enabled &&
-                    widget.showDropdownIcon &&
-                    widget.dropdownIconPosition == IconPosition.leading) ...[
-                  Image.asset(
-                    'assets/flags/dropdown.svg', // Replace with your actual asset path
-                    width: 24, // Adjust size if needed
-                    height: 24,
-                  ),
-                  const SizedBox(width: 4),
-                ],
-                FittedBox(
-                  child: Text(
-                    '+${_selectedCountry.dialCode}-',
-                    style: widget.dropdownTextStyle,
+                Container(
+                  width: 24,
+                  height: 24,
+                  child: UnconstrainedBox(
+                    child: Image.asset(
+                      'assets/flags/Vector.png', // Replace with your actual asset path
+                      package: 'intl_phone_field',
+                      width: 10, // Adjust size if needed
+                      height: 8,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-                if (widget.enabled &&
-                    widget.showDropdownIcon &&
-                    widget.dropdownIconPosition == IconPosition.trailing) ...[
-                  const SizedBox(width: 4),
-                  widget.dropdownIcon,
-                ],
-                const SizedBox(width: 8),
+                const SizedBox(width: 4),
+                IntrinsicWidth(
+                  child: TextField(
+                    controller: countryCodeController,
+                    style: TextStyle(
+                        fontFamily: "OpenSansHebrew-Bold",
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0XFF3F4648)),
+                    keyboardType: TextInputType.text,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'^\+?\d{0,4}')), // Allows + and numbers only
+                    ],
+                    decoration: InputDecoration(
+                        border: UnderlineInputBorder(borderSide: BorderSide.none),
+                        hintText: '+${_selectedCountry.dialCode}',
+                        hintStyle: TextStyle(
+                            fontFamily: "OpenSansHebrew-Bold",
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0XFF3F4648))),
+                    onChanged: (value) {
+                      if (value.startsWith('+')) {
+                        String dialCode = value.substring(1);
+                        Country? newCountry = _countryList.firstWhere(
+                          (country) => country.dialCode == dialCode,
+                          orElse: () => _selectedCountry,
+                        );
+                        if (newCountry.code != _selectedCountry.code) {
+                          setState(() {
+                            _selectedCountry = newCountry;
+                          });
+
+                          Future.delayed(Duration(milliseconds: 100), () {
+                            widget.focusNode?.requestFocus(); // Re-request focus after setState
+                          });
+
+                          widget.onCountryChanged?.call(newCountry);
+                        }
+                      }
+                    },
+                  ),
+                )
+                // const SizedBox(width: 8),
               ],
             ),
           ),

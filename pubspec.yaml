@@ -9,6 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_screenutil: ^5.9.3
+  flutter_svg: ^2.0.17
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_lints: ^2.0.1
@@ -19,3 +22,13 @@ dev_dependencies:
 flutter:
   assets:
     - assets/flags/
+    - assets/flags/Vector.png
+    - assets/fonts/
+  fonts:
+    - family: OpenSansHebrew-Bold
+      fonts:
+        - asset: assets/fonts/OpenSansHebrew-Bold.ttf
+    - family: OpenSansHebrew-Regular
+      fonts:
+        - asset: assets/fonts/OpenSansHebrew-Regular.ttf
+
