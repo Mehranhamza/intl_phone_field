@@ -456,7 +456,7 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
   Container _buildFlagsButton() {
     TextEditingController countryCodeController = TextEditingController(text: '+${_selectedCountry.dialCode}');
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: 8),
       margin: widget.flagsButtonMargin,
       child: DecoratedBox(
         decoration: widget.dropdownDecoration,
@@ -475,6 +475,9 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                SizedBox(
+                  width: 4.w,
+                ),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8), // Soft rounded rectangle
                   child: Container(
@@ -544,7 +547,7 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
                     },
                   ),
                 ),
-                Text("hi")
+
                 // const SizedBox(width: 8),
               ],
             ),
