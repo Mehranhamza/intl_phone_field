@@ -489,7 +489,7 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
                 ],
                 FittedBox(
                   child: Text(
-                    '+${_selectedCountry.dialCode}',
+                    '++${_selectedCountry.dialCode}-',
                     style: widget.dropdownTextStyle,
                   ),
                 ),
