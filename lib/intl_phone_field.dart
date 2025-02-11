@@ -472,10 +472,14 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
                 ],
                 if (widget.showCountryFlag) ...[
                   kIsWeb
-                      ? Image.asset(
-                          'assets/flags/${_selectedCountry.code.toLowerCase()}.png',
-                          package: 'intl_phone_field',
-                          width: 32,
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(8), // Adjust radius for more rounding
+                          child: Image.asset(
+                            'assets/flags/${_selectedCountry.code.toLowerCase()}.png',
+                            package: 'intl_phone_field',
+                            width: 32,
+                            fit: BoxFit.cover, // Ensures it fills the rounded box properly
+                          ),
                         )
                       : Text(
                           _selectedCountry.flag,
