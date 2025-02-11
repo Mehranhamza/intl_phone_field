@@ -461,35 +461,39 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const SizedBox(
-                  width: 4,
-                ),
+                if (widget.showCountryFlag) ...[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8), // Soft rounded rectangle
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Color(0XFF8B939C).withOpacity(0.2)),
+                      ),
+                      child: Image.asset(
+                        'assets/flags/${_selectedCountry.code.toLowerCase()}.png',
+                        package: 'intl_phone_field',
+                        fit: BoxFit.cover, // Ensures the flag fills the box properly
+                        width: 32,
+                        height: 24,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                ],
+                const SizedBox(width: 4),
                 if (widget.enabled &&
                     widget.showDropdownIcon &&
                     widget.dropdownIconPosition == IconPosition.leading) ...[
-                  widget.dropdownIcon,
+                  Image.asset(
+                    'assets/flags/dropdown.svg', // Replace with your actual asset path
+                    width: 24, // Adjust size if needed
+                    height: 24,
+                  ),
                   const SizedBox(width: 4),
-                ],
-                if (widget.showCountryFlag) ...[
-                  kIsWeb
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(8), // Adjust radius for more rounding
-                          child: Image.asset(
-                            'assets/flags/${_selectedCountry.code.toLowerCase()}.png',
-                            package: 'intl_phone_field',
-                            width: 32,
-                            fit: BoxFit.cover, // Ensures it fills the rounded box properly
-                          ),
-                        )
-                      : Text(
-                          _selectedCountry.flag,
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                  const SizedBox(width: 8),
                 ],
                 FittedBox(
                   child: Text(
-                    '++${_selectedCountry.dialCode}-',
+                    '+${_selectedCountry.dialCode}-',
                     style: widget.dropdownTextStyle,
                   ),
                 ),
