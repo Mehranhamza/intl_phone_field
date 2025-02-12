@@ -476,7 +476,7 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 SizedBox(
-                  width: 4.w,
+                  width: 10.w,
                 ),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8), // Soft rounded rectangle
@@ -510,9 +510,9 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
                   ),
                 ),
                 const SizedBox(width: 4),
+                // This text field
                 IntrinsicWidth(
                   child: TextField(
-                    controller: countryCodeController,
                     style: TextStyle(
                         fontFamily: "OpenSansHebrew-Bold",
                         fontSize: 16.sp,
@@ -544,8 +544,6 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
                     },
                   ),
                 ),
-
-                // const SizedBox(width: 8),
               ],
             ),
           ),
