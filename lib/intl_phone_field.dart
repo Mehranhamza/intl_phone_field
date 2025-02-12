@@ -518,10 +518,7 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w700,
                         color: Color(0XFF3F4648)),
-                    keyboardType: TextInputType.text,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'^\+?\d{0,4}')), // Allows + and numbers only
-                    ],
+                    keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
                         border: UnderlineInputBorder(borderSide: BorderSide.none),
                         hintText: '+${_selectedCountry.dialCode}',
